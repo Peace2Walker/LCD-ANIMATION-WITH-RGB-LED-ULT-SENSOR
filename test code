@@ -1,0 +1,501 @@
+//LCD EKRAN (I2C)
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+byte o1[8] =
+  {
+    B00000,
+    B01100,
+    B00111,
+    B00011,
+    B00001,
+    B00000,
+    B00001,
+    B00011,
+  };
+
+byte o2[8] =
+  {
+    B00000,
+    B00000,
+    B11000,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+  };
+
+byte o3[8] =
+  {
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+    B11000,
+    B11100,
+    B11110,
+    B01111,
+  };
+
+//2. yer
+
+byte u1[8] =
+  {
+    B00011,
+    B00111,
+    B00111,
+    B00111,
+    B01111,
+    B01111,
+    B01111,
+    B11111,
+  };
+
+byte u2[8] =
+  {
+    B11111,
+    B11001,
+    B10000,
+    B11001,
+    B11111,
+    B11111,
+    B11110,
+    B11110,
+  };
+
+byte u3[8] =
+  {
+    B11110,
+    B11100,
+    B11000,
+    B10000,
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+  };
+
+//Tetikte
+
+byte oo1[8] =
+  {
+    B00001,
+    B01100,
+    B00111,
+    B00011,
+    B00001,
+    B00000,
+    B00001,
+    B00011,
+  };
+
+byte oo2[8] =
+  {
+    B10000,
+    B11000,
+    B11100,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+  };
+
+byte oo3[8] =
+  {
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+    B11000,
+    B11100,
+    B11110,
+    B01111,
+  };
+
+//2. yer
+
+byte uu1[8] =
+  {
+    B00011,
+    B00011,
+    B00111,
+    B00111,
+    B01111,
+    B01111,
+    B11111,
+    B11111,
+  };
+
+byte uu2[8] =
+  {
+    B11111,
+    B11001,
+    B10000,
+    B11001,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+  };
+
+byte uu3[8] =
+  {
+    B11110,
+    B11100,
+    B11000,
+    B10000,
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+  };
+
+//Saldirgan
+
+byte ooo1[8] =
+  {
+    B10000,
+    B11100,
+    B01111,
+    B00111,
+    B00001,
+    B00000,
+    B00001,
+    B00011,
+  };
+
+byte ooo2[8] =
+  {
+    B01100,
+    B00010,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+  };
+
+byte ooo3[8] =
+  {
+    B00000,
+    B00000,
+    B00000,
+    B10000,
+    B11100,
+    B11110,
+    B11111,
+    B01110,
+  };
+
+//2. yer
+
+byte uuu1[8] =
+  {
+    B00011,
+    B00111,
+    B00111,
+    B01111,
+    B01111,
+    B01111,
+    B11111,
+    B11111,
+  };
+
+byte uuu2[8] =
+  {
+    B11111,
+    B11001,
+    B10000,
+    B11001,
+    B11111,
+    B11111,
+    B11111,
+    B11111,
+  };
+
+byte uuu3[8] =
+  {
+    B11111,
+    B11100,
+    B11000,
+    B10000,
+    B00000,
+    B00000,
+    B00000,
+    B00000,
+  };
+
+//ULTRASONIC SENSOR
+
+const int trig = 12;
+const int echo = 13;
+
+int zaman = 0;
+int mesafe = 0;
+
+//RGB LED
+
+const int mavi = 3;
+const int yesil = 5;
+const int kirmizi = 6;
+
+void setup() {
+  // put your setup code here, to run once:
+
+  //ULTRASONIC SENSOR
+
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  Serial.begin(9600);
+
+  // LCD EKRAN
+
+  lcd.init();
+  lcd.backlight();
+
+  // RGB LED
+
+  pinMode(mavi, OUTPUT);
+  pinMode(yesil, OUTPUT);
+  pinMode(kirmizi, OUTPUT);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  //ULTRASONIC SENSOR
+
+digitalWrite(trig, HIGH);
+delayMicroseconds(1000);
+digitalWrite(trig, LOW);
+
+zaman=pulseIn(echo,HIGH);
+mesafe=((zaman/2)/29.1);
+
+Serial.print("Mesafe: ");
+Serial.print(mesafe);
+Serial.println(" cm");
+delay(200);
+
+  //LCD EKRAN
+
+if (mesafe > 60)
+{
+  lcd.createChar (1, o1);
+  lcd.createChar (2, o2);
+  lcd.createChar (3, o3);
+  lcd.createChar (4, u1);
+  lcd.createChar (5, u2);
+  lcd.createChar (6, u3);
+}
+else if (mesafe > 30)
+{
+  lcd.createChar (1, oo1);
+  lcd.createChar (2, oo2);
+  lcd.createChar (3, oo3);
+  lcd.createChar (4, uu1);
+  lcd.createChar (5, uu2);
+  lcd.createChar (6, uu3);
+}
+else
+{
+  lcd.createChar (1, ooo1);
+  lcd.createChar (2, ooo2);
+  lcd.createChar (3, ooo3);
+  lcd.createChar (4, uuu1);
+  lcd.createChar (5, uuu2);
+  lcd.createChar (6, uuu3);
+}
+
+  lcd.setCursor (3, 0);
+  lcd.write (1);
+  lcd.setCursor (4, 0);
+  lcd.write (2);
+  lcd.setCursor (5, 0);
+  lcd.write (3);
+  
+  lcd.setCursor (3, 1);
+  lcd.write (4);
+  lcd.setCursor (4, 1);
+  lcd.write (5);
+  lcd.setCursor (5, 1);
+  lcd.write (6);
+
+  //RGB LED
+
+if (mesafe > 60)
+{
+  analogWrite(mavi, 255);
+  analogWrite(yesil, 0);
+  analogWrite(kirmizi, 0);
+}
+
+else if (mesafe < 30)
+{
+  analogWrite(mavi, 0);
+  analogWrite(yesil, 0);
+  analogWrite(kirmizi, 255);
+}
+
+switch (mesafe) {
+  case 30:
+  analogWrite(mavi,0);
+  analogWrite(yesil,20);
+  analogWrite(kirmizi,255);
+  break;
+  case 31:
+  analogWrite(mavi,0);
+  analogWrite(yesil,40);
+  analogWrite(kirmizi,255);
+  break;
+  case 32:
+  analogWrite(mavi,0);
+  analogWrite(yesil,60);
+  analogWrite(kirmizi,255);
+  break;
+  case 33:
+  analogWrite(mavi,0);
+  analogWrite(yesil,80);
+  analogWrite(kirmizi,255);
+  break;
+  case 34:
+  analogWrite(mavi,0);
+  analogWrite(yesil,100);
+  analogWrite(kirmizi,255);
+  break;
+  case 35:
+  analogWrite(mavi,0);
+  analogWrite(yesil,120);
+  analogWrite(kirmizi,255);
+  break;
+  case 36:
+  analogWrite(mavi,0);
+  analogWrite(yesil,140);
+  analogWrite(kirmizi,255);
+  break;
+  case 37:
+  analogWrite(mavi,0);
+  analogWrite(yesil,160);
+  analogWrite(kirmizi,255);
+  break;
+  case 38:
+  analogWrite(mavi,0);
+  analogWrite(yesil,180);
+  analogWrite(kirmizi,255);
+  break;
+  case 39:
+  analogWrite(mavi,0);
+  analogWrite(yesil,200);
+  analogWrite(kirmizi,240);
+  break;
+  case 40:
+  analogWrite(mavi,20);
+  analogWrite(yesil,220);
+  analogWrite(kirmizi,220);
+  case 41:
+  analogWrite(mavi,40);
+  analogWrite(yesil,240);
+  analogWrite(kirmizi,200);
+  break;
+    case 42:
+  analogWrite(mavi,60);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,180);
+  break;
+    case 43:
+  analogWrite(mavi,80);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,160);
+  break;
+    case 44:
+  analogWrite(mavi,100);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,140);
+  break;
+    case 45:
+  analogWrite(mavi,120);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,120);
+  break;
+    case 46:
+  analogWrite(mavi,140);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,100);
+  break;
+    case 47:
+  analogWrite(mavi,160);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,80);
+  break;
+    case 48:
+  analogWrite(mavi,180);
+  analogWrite(yesil,255);
+  analogWrite(kirmizi,60);
+  break;
+    case 49:
+  analogWrite(mavi,200);
+  analogWrite(yesil,240);
+  analogWrite(kirmizi,40);
+  break;
+    case 50:
+  analogWrite(mavi,220);
+  analogWrite(yesil,220);
+  analogWrite(kirmizi,20);
+  break;
+    case 51:
+  analogWrite(mavi,240);
+  analogWrite(yesil,200);
+  analogWrite(kirmizi,0);
+  break;
+    case 52:
+  analogWrite(mavi,255);
+  analogWrite(yesil,180);
+  analogWrite(kirmizi,0);
+  break;
+      case 53:
+  analogWrite(mavi,255);
+  analogWrite(yesil,160);
+  analogWrite(kirmizi,0);
+  break;
+      case 54:
+  analogWrite(mavi,255);
+  analogWrite(yesil,140);
+  analogWrite(kirmizi,0);
+  break;
+      case 55:
+  analogWrite(mavi,255);
+  analogWrite(yesil,120);
+  analogWrite(kirmizi,0);
+      case 56:
+  analogWrite(mavi,255);
+  analogWrite(yesil,100);
+  analogWrite(kirmizi,0);
+      case 57:
+  analogWrite(mavi,255);
+  analogWrite(yesil,80);
+  analogWrite(kirmizi,0);
+      case 58:
+  analogWrite(mavi,255);
+  analogWrite(yesil,60);
+  analogWrite(kirmizi,0);
+      case 59:
+  analogWrite(mavi,255);
+  analogWrite(yesil,40);
+  analogWrite(kirmizi,0);
+      case 60:
+  analogWrite(mavi,255);
+  analogWrite(yesil,20);
+  analogWrite(kirmizi,0);
+  
+  break;
+  
+  }
+
+}
